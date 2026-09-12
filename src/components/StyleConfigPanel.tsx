@@ -2139,6 +2139,13 @@ export default function StyleConfigPanel({
   const ov = accentOverrides[style];
 
   switch (style) {
+    case 'warning':
+      return (
+        <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.36)' }}>
+          该风格已按案例锁定暗金视觉、警示型文案层级和逐条节奏，无需额外配置。
+        </p>
+      );
+
     case 'chinese':
       return (
         <div className="space-y-6">

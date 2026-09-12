@@ -7,6 +7,7 @@ import PlanGrid from '@/components/commerce/PlanGrid';
 const STYLE_CASES = [
   { id: 'city', name: '知识结构', video: '/videos/style-structure-preview.mp4', poster: '/videos/style-structure-poster.jpg' },
   { id: 'semantic', name: '语义图解', video: '/videos/style-semantic-preview.mp4', poster: '/videos/style-semantic-poster.jpg' },
+  { id: 'warning', name: '认知警示', video: '/videos/style-warning-preview.mp4', poster: '/videos/style-warning-poster.jpg' },
 ];
 
 export default function Home() {

@@ -28,4 +28,12 @@ export const ANIMATION_STYLES: AnimationStyleDefinition[] = [
     bg: 'linear-gradient(135deg,#090b14,#172033)',
     accent: '#f4cc63',
   },
+  {
+    key: 'warning',
+    name: '认知警示',
+    desc: '陷阱清单 · 尖锐判断 · 具体后果',
+    tag: '观点警示清单',
+    bg: 'radial-gradient(circle,#050505,#3b3512)',
+    accent: '#f4dc70',
+  },
 ];

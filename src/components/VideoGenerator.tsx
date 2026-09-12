@@ -103,6 +103,7 @@ export default function VideoGenerator({
   const accent = style === 'chinese' ? '#e74c3c'
     : style === 'city' ? '#f5d87a'
     : style === 'semantic' ? '#f4cc63'
+    : style === 'warning' ? '#f4dc70'
     : style === 'nature' ? '#4ade80' : '#a855f7';
 
   // ── Listen for cross-instance events (FFmpeg result from old instance) ──

@@ -1,4 +1,4 @@
-export type StyleType = 'chinese' | 'city' | 'semantic' | 'aitech' | 'nature' | 'subtitle' | 'translation' | 'manga' | 'keyword' | 'cat3d' | 'zen' | 'elite' | 'aigoblin';
+export type StyleType = 'chinese' | 'city' | 'semantic' | 'warning' | 'aitech' | 'nature' | 'subtitle' | 'translation' | 'manga' | 'keyword' | 'cat3d' | 'zen' | 'elite' | 'aigoblin';
 export type ColorScheme = 'ink' | 'cinnabar' | 'jade' | 'gold' | 'porcelain';
 export type AnimMode = 'grid' | 'single';
 export type PolyShape = 'triangle' | 'quad' | 'pentagon' | 'hexagon' | 'octagon' | 'star5' | 'decagon';

@@ -23,7 +23,7 @@ import ApiKeyDialog from '../components/ApiKeyDialog';
 import StudioCanvas from '../components/StudioCanvas';
 import { validateKnowledgeContent } from '../lib/knowledgeQuality';
 import {
-  extractContent, extractNatureContent, translateSentence, getStoredApiKey, extractKeywords,
+  extractContent, extractWarningContent, extractNatureContent, translateSentence, getStoredApiKey, extractKeywords,
 } from '../services/deepseek';
 import {
   generateMangaContent, type GenerationProgress,
@@ -120,6 +120,7 @@ const BG_BY_STYLE: Record<StyleType, string> = {
   chinese:     CLAUDE_BG,
   city:        CLAUDE_BG,
   semantic:    CLAUDE_BG,
+  warning:     CLAUDE_BG,
   aitech:      CLAUDE_BG,
   nature:      CLAUDE_BG,
   subtitle:    CLAUDE_BG,
@@ -136,6 +137,7 @@ const ACCENT_BY_STYLE: Record<StyleType, string> = {
   chinese:     '#e74c3c',
   city:        '#f5d87a',
   semantic:    '#f4cc63',
+  warning:     '#f4dc70',
   aitech:      '#a855f7',
   nature:      '#4ade80',
   subtitle:    '#ffd700',
@@ -156,7 +158,7 @@ export default function Index() {
   const [searchParams] = useSearchParams();
   const { user, hasPaidAccess, openAuth } = useCommerce();
   const initialStyle = searchParams.get('style');
-  const [style, setStyle] = useState<StyleType>(initialStyle === 'semantic' ? 'semantic' : 'city');
+  const [style, setStyle] = useState<StyleType>(initialStyle === 'semantic' || initialStyle === 'warning' ? initialStyle : 'city');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [content, setContent] = useState<GeneratedContent | null>(null);
@@ -259,6 +261,10 @@ export default function Index() {
         const result = rawMode ? parseRawContent(text) : await extractKeywords(text);
         setContent(result);
         setNatureContent(null);
+      } else if (style === 'warning') {
+        const result = rawMode ? parseRawContent(text) : await extractWarningContent(text);
+        setContent(ensureKnowledgeLimit(result));
+        setNatureContent(null);
       } else if (rawMode) {
         setContent(ensureKnowledgeLimit(parseRawContent(text)));
         setNatureContent(null);
@@ -333,7 +339,7 @@ export default function Index() {
   const isGoblin = style === 'aigoblin';
   const canvasContent = isManga ? (mangaContent ? MANGA_DUMMY_CONTENT : null) : content;
   const hasRecordableContent = isManga ? !!mangaContent : (isGoblin ? !!content : !!content);
-  const qualityIssues = (style === 'city' || style === 'semantic') && content ? validateKnowledgeContent(content) : [];
+  const qualityIssues = (style === 'city' || style === 'semantic' || style === 'warning') && content ? validateKnowledgeContent(content) : [];
   const canExport = hasRecordableContent;
 
   const requestExport = () => {

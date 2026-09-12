@@ -15,6 +15,7 @@ const ACCENT_BY_STYLE: Record<StyleType, string> = {
   chinese:     '#e74c3c',
   city:        '#f5d87a',
   semantic:    '#f4cc63',
+  warning:     '#f4dc70',
   aitech:      '#a855f7',
   nature:      '#4ade80',
   subtitle:    '#ffd700',
@@ -23,7 +24,7 @@ const ACCENT_BY_STYLE: Record<StyleType, string> = {
 };
 
 const MAX_POINTS: Record<StyleType, number> = {
-  chinese: 12, city: 16, semantic: 16, aitech: 12, nature: 1, subtitle: 20, translation: 1,
+  chinese: 12, city: 16, semantic: 16, warning: 12, aitech: 12, nature: 1, subtitle: 20, translation: 1,
 };
 
 // ── Shared primitive inputs ────────────────────────────────────────────────────
@@ -136,9 +137,9 @@ function PointCard({
         </>
       ) : (
         <>
-          <FieldInput label={style === 'city' ? '全貌关键词' : '关键词'} value={point.label} onChange={v => upd({ label: v })} accent={accent} placeholder={style === 'city' ? '全貌折线上的核心词…' : '两三个字的核心词…'} />
-          <FieldInput label={style === 'city' ? '金字塔解释' : '短句'} value={point.short} onChange={v => upd({ short: v })} accent={accent} multiline={style === 'city'} placeholder={style === 'city' ? '解释这个核心词的含义…' : '一句话概括…'} />
-          <FieldInput label={style === 'city' ? '流程操作步骤（每行一条）' : style === 'semantic' ? '补充要点（每行一条）' : '说明'} value={point.desc} onChange={v => upd({ desc: v })} accent={accent} multiline allowAddLine={style === 'city' || style === 'semantic'} placeholder={style === 'city' ? '打开设置\n选择插件\n点击安装' : style === 'semantic' ? '补充事实\n给出例子\n说明结果' : '详细说明（可留空）…'} />
+          <FieldInput label={style === 'city' ? '全貌关键词' : style === 'warning' ? '陷阱名称' : '关键词'} value={point.label} onChange={v => upd({ label: v })} accent={accent} placeholder={style === 'city' ? '全貌折线上的核心词…' : style === 'warning' ? '例如：奶头乐陷阱' : '两三个字的核心词…'} />
+          <FieldInput label={style === 'city' ? '金字塔解释' : style === 'warning' ? '尖锐判断' : '短句'} value={point.short} onChange={v => upd({ short: v })} accent={accent} multiline={style === 'city'} placeholder={style === 'city' ? '解释这个核心词的含义…' : style === 'warning' ? '一句话点破它的代价…' : '一句话概括…'} />
+          <FieldInput label={style === 'city' ? '流程操作步骤（每行一条）' : style === 'semantic' ? '补充要点（每行一条）' : style === 'warning' ? '具体行为或后果' : '说明'} value={point.desc} onChange={v => upd({ desc: v })} accent={accent} multiline allowAddLine={style === 'city' || style === 'semantic'} placeholder={style === 'city' ? '打开设置\n选择插件\n点击安装' : style === 'semantic' ? '补充事实\n给出例子\n说明结果' : style === 'warning' ? '写清可观察的行为和最终后果…' : '详细说明（可留空）…'} />
           {style === 'city' && (
             <>
               <FieldInput label="界面截图地址（工具实操可选）" value={point.mediaUrl ?? ''} onChange={v => upd({ mediaUrl: v })} accent={accent} placeholder="https://…（请先处理隐私信息）" />

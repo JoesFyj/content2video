@@ -39,6 +39,15 @@ export function getThemeConfig(style: StyleType, chineseOptions?: ChineseOptions
       gridColor: '#9ec9e6',
     };
   }
+  if (style === 'warning') {
+    return {
+      bg: ['#050505', '#151407', '#3b3512'],
+      accent: '#f4dc70',
+      accent2: '#ff9d18',
+      particle: '#f4dc70',
+      gridColor: '#8f8234',
+    };
+  }
   if (style === 'nature') {
     return {
       bg: ['#060e06', '#0d1a0e', '#111f12'],

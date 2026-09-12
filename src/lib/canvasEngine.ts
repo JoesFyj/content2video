@@ -14,6 +14,7 @@ import { drawOutro, drawOverlays } from './engine/outro';
 import { drawNatureScene, natureTotalMs } from './engine/nature-scene';
 import { cityTotalMs, KNOWLEDGE_OUTRO_MS } from './engine/cards-city';
 import { semanticTotalMs } from './engine/cards-semantic';
+import { drawWarningScene, warningTotalMs } from './engine/cards-warning';
 import {
   drawSubtitle, subtitleTotalMs,
   initSubtitleParticles, type SubParticle,
@@ -165,12 +166,13 @@ export async function createAnimEngine(
   const isGoblin      = style === 'aigoblin';
   const isKeyword     = style === 'keyword';
   const isSemantic    = style === 'semantic';
+  const isWarning     = style === 'warning';
 
   const rand = seededRandom(coverIndex * 31 + content.points.length * 17 + 7);
 
   // Shape image not needed for nature, subtitle, translation, manga, goblin, or keyword styles
   let shapeImg: HTMLImageElement | null = null;
-  if (!isNature && !isSubtitle && !isTranslation && !isManga && !isKeyword && !isGoblin && !isSemantic) {
+  if (!isNature && !isSubtitle && !isTranslation && !isManga && !isKeyword && !isGoblin && !isSemantic && !isWarning) {
     const shapeList = style === 'chinese' ? CHINESE_SHAPES
       : style === 'city' ? CITY_SHAPES : AI_SHAPES;
     // For Chinese: pick shape by content keywords; other styles cycle by coverIndex
@@ -239,6 +241,8 @@ export async function createAnimEngine(
             ? cityTotalMs(content.points.length, content, cityOptions?.animationSeed)
             : style === 'semantic'
               ? semanticTotalMs(content.points.length)
+            : style === 'warning'
+              ? warningTotalMs(content.points.length)
             : style === 'aitech'
               ? aiTechPhases(content.points.length).total
               : style === 'chinese'
@@ -284,6 +288,11 @@ export async function createAnimEngine(
       // Nature title is handled by unified drawTitle
       const natureTitleContent: GeneratedContent = { title: natureContent.title, points: [] };
       drawTitle(ctx, elapsed, natureTitleContent, accent, accent2, 'nature', titleOptions);
+      return;
+    }
+
+    if (isWarning) {
+      drawWarningScene(ctx, elapsed, content);
       return;
     }
 

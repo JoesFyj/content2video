@@ -125,6 +125,59 @@ export async function extractContent(text: string): Promise<GeneratedContent> {
   };
 }
 
+const WARNING_PROMPT = `你是观点型短视频文案编辑。用户会提供一段观点、文章或主题。必须严格整理成“认知警示清单”，以JSON返回，不要输出任何多余文字。
+
+返回格式：
+{
+  "title": "某类人的N大陷阱/误区/表现（8-14字）",
+  "audience": "beginner",
+  "actionPrompt": "避开这些陷阱",
+  "points": [
+    {
+      "label": "四到八字的陷阱名称",
+      "short": "一句尖锐判断（8-16字）",
+      "desc": "一句具体行为或后果（14-24字）",
+      "formatted": "陷阱名称：尖锐判断",
+      "sceneType": "before-after",
+      "source": "",
+      "verifiedAt": ""
+    }
+  ]
+}
+
+写法必须遵守：
+- 标题明确说清对象、数量和警示主题，例如“困住普通人的四大陷阱”
+- label只命名一种陷阱，具体、有记忆点，禁止空泛词
+- short必须像案例中的判断句，短、狠、直接点破代价；禁止解释概念
+- desc只写可观察的行为或结果，不重复short，不喊口号
+- 每一点之间角度不同，句式平行，长度接近
+- 原文明确数量时严格保持；未明确时提炼4点
+- 不捏造事实、数字、身份或因果
+- 只返回JSON`;
+
+export async function extractWarningContent(text: string): Promise<GeneratedContent> {
+  if (text.length < 20) throw new Error('内容太短，请输入至少20个字符');
+  if (text.length > 8000) throw new Error('内容过长，请控制在8000字以内');
+  const raw = await callDeepSeek(WARNING_PROMPT, text, 1000);
+  let parsed: GeneratedContent;
+  try { parsed = parseJsonFromAI(raw) as GeneratedContent; }
+  catch { throw new Error('AI 返回格式错误，请重试'); }
+  if (!parsed.title || !Array.isArray(parsed.points) || parsed.points.length === 0) {
+    throw new Error('AI 返回数据不完整，请重试');
+  }
+  return {
+    ...parsed,
+    audience: 'beginner',
+    actionPrompt: parsed.actionPrompt?.trim() || '避开这些陷阱',
+    points: parsed.points.map(point => ({
+      ...point,
+      sceneType: 'before-after',
+      source: point.source?.trim() || '',
+      verifiedAt: point.verifiedAt?.trim() || '',
+    })),
+  };
+}
+
 export async function extractNatureContent(text: string): Promise<NatureContent> {
   if (text.length < 10) throw new Error('内容太短');
 
